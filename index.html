@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeIQ - AI Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <div class="logo">Resume<span>IQ</span></div>
+    <p>AI Resume Analyzer</p>
+</header>
+
+<main>
+    <section class="hero">
+        <h1>Make your resume <span>job-ready.</span></h1>
+        <p>Analyze ATS compatibility, skills, sections, and job-description keywords.</p>
+    </section>
+
+    <form method="POST" class="card">
+        <label>Resume Text</label>
+        <textarea name="resume_text" placeholder="Paste your resume text here..." required>{{ resume_text }}</textarea>
+
+        <label>Job Description</label>
+        <textarea name="job_description" placeholder="Paste the target job description here...">{{ job_description }}</textarea>
+
+        <button type="submit">Analyze Resume</button>
+    </form>
+
+    {% if result %}
+    <section class="results">
+        <div class="score-card card">
+            <h2>ATS Compatibility Score</h2>
+            <div class="score">{{ result.score }}<small>/100</small></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Detected Skills</h2>
+                {% for skill in result.skills %}
+                    <span class="tag">{{ skill }}</span>
+                {% else %}
+                    <p>No skills detected yet.</p>
+                {% endfor %}
+            </div>
+
+            <div class="card">
+                <h2>Resume Sections</h2>
+                {% for section in result.sections %}
+                    <span class="tag">{{ section }}</span>
+                {% else %}
+                    <p>No standard sections detected.</p>
+                {% endfor %}
+            </div>
+
+            <div class="card">
+                <h2>Matched Keywords</h2>
+                {% for item in result.matched %}
+                    <span class="tag good">{{ item }}</span>
+                {% else %}
+                    <p>No matching keywords found.</p>
+                {% endfor %}
+            </div>
+
+            <div class="card">
+                <h2>Missing Keywords</h2>
+                {% for item in result.missing %}
+                    <span class="tag missing">{{ item }}</span>
+                {% else %}
+                    <p>No missing keywords detected.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>AI-Style Improvement Suggestions</h2>
+            <ul>
+                {% for suggestion in result.suggestions %}
+                    <li>{{ suggestion }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+<footer>ResumeIQ • College Project</footer>
+</body>
+</html>
